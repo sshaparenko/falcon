@@ -1,0 +1,4 @@
+HELP MENU :: Acailable options shown below:
+
+[*]  Tutorial of how to use this tool     TUTORIAL
+[*]  Show this Help MENU                  HELP
