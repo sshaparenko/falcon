@@ -1,0 +1,7 @@
+Usage: falcon run [OPTIONS]
+
+Run Falcon to create commands history of the current termianl
+
+Options:
+  --s       Run Falcon in silent mode
+  --help    Show help menu for run command

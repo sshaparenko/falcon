@@ -1,54 +1,40 @@
 package main
 
 import (
-	"bufio"
 	_ "embed"
 	"fmt"
 	"os"
 	"time"
 
 	"github.com/sshaparenko/falcon/pkg/colors"
+	"github.com/sshaparenko/falcon/pkg/commands"
 )
 
-//go:embed common/falcon.txt
-var common string
-
-//go:embed common/menu.txt
-var menu string
-
 func main() {
-	colors.PrintMagenta(common)
-	colors.PrintYellow(menu)
-	reader := bufio.NewReader(os.Stdin)
 
-	for {
-		fmt.Print("> ")
-		input, err := reader.ReadBytes(10)
-		command := string(noDelim(input))
-
-		if err != nil {
-			colors.PrintRed("Cannot read user input")
-			os.Exit(1)
-		}
-
-		switch command {
-		case "start":
-			fmt.Printf("%v: Staring Falcon...\n", formatedTime())
-			fmt.Printf("%v: Listening to your terminals...\n", formatedTime())
-		case "stop":
-			fmt.Printf("%v: Saving history...\n", formatedTime())
-			colors.PrintGreen("[+] Falcon has finished")
-			os.Exit(0)
-		case "help":
-			colors.PrintYellow(menu)
-		default:
-			fmt.Println("Unknown command")
-		}
+	if len(os.Args) < 2 {
+		fmt.Println("Not a valid command. Write falcon --help to see a list of avalable commands")
+		os.Exit(1)
 	}
-}
 
-func noDelim(input []byte) []byte {
-	return input[:len(input)-1]
+	commands.Help(os.Args[1:])
+
+	command := os.Args[1]
+	flags := os.Args[2:]
+
+	switch command {
+	case "run":
+		commands.Run(flags)
+		fmt.Printf("%v: Listening to your terminals...\n", formatedTime())
+	case "stop":
+		fmt.Printf("%v: Saving history...\n", formatedTime())
+		colors.PrintGreen("[+] Falcon has finished")
+		os.Exit(0)
+	case "pid":
+		commands.Pid(flags)
+	default:
+		fmt.Printf("%s is unknown command. Write falcon --help to see a list of avalable commands\n", command)
+	}
 }
 
 func formatedTime() string {
