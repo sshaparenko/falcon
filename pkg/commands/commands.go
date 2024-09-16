@@ -2,7 +2,6 @@ package commands
 
 import (
 	_ "embed"
-	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -11,77 +10,84 @@ import (
 
 	"github.com/creack/pty"
 	"github.com/sshaparenko/falcon/pkg/colors"
-	"github.com/sshaparenko/falcon/pkg/socket"
+	"github.com/sshaparenko/falcon/pkg/terminal"
 )
 
-//go:embed menu.txt
-var falcon_help string
-
-//go:embed run.txt
-var run_help string
-
-//go:embed pid.txt
-var pids_help string
-
-//go:embed falcon.txt
-var info string
+var (
+	//go:embed menu.txt
+	falcon_help string
+	//go:embed run.txt
+	run_help string
+	//go:embed pid.txt
+	pids_help string
+	//go:embed falcon.txt
+	info string
+)
 
 func Run(args []string) {
-	fs := flag.NewFlagSet("run", flag.ContinueOnError)
-	sm := fs.Bool("s", false, "start falcon with silent mode")
-	help := fs.Bool("help", false, "show the menu with available commands")
+	helpFlag := NewFlag("help", false, "show the menu with available commands")
+
+	fs, wrapper := BuildFlagSet("run", []*Flag{helpFlag})
+
 	if err := fs.Parse(args); err != nil {
 		log.Fatalf("Failed to parse flags of command <run>: %s\n", err.Error())
 	}
-	if *help {
+	fName := wrapper.CheckActive()
+	switch fName {
+	case "help":
 		colors.PrintMagenta(info)
 		fmt.Println(run_help)
-		os.Exit(0)
+		return
+	default:
+		fmt.Printf("%v: Staring Falcon...\n", formatedTime())
+		terminal.Run()
 	}
-	fmt.Printf("%v: Staring Falcon...\n", formatedTime())
-	socket.Run()
-	fmt.Printf("%v: Silent Mode: %t\n", formatedTime(), *sm)
-
 }
 
 func Help(args []string) {
-	fs := flag.NewFlagSet("falcon", flag.ContinueOnError)
-	help := fs.Bool("help", false, "show menu with available commands")
+	helpFlag := NewFlag("help", false, "show menu with available commands")
+
+	fs, wrapper := BuildFlagSet("falcon", []*Flag{helpFlag})
+
 	if err := fs.Parse(args); err != nil {
 		log.Fatalf("Failed to parse flags of command <falcon>: %s\n", err.Error())
 	}
-	if *help {
+
+	fName := wrapper.CheckActive()
+	switch fName {
+	case "help":
 		colors.PrintMagenta(info)
 		fmt.Println(falcon_help)
-		os.Exit(0)
+		return
 	}
 }
 
 func Pid(args []string) {
-	fs := flag.NewFlagSet("pids", flag.ContinueOnError)
+	trackedFlag := NewFlag("tracked", false, "Show shell PIDs that are tracked by Falcon")
+	allFlag := NewFlag("all", false, "Show PIDs of all shells")
+	helpFlag := NewFlag("help", false, "Show menu with available commands")
 
-	trackedFlag := fs.Bool("tracked", false, "Show shell PIDs that are tracked by Falcon")
-	allFlag := fs.Bool("all", false, "Show PIDs of all shells")
-	// currentFlag := fs.Bool("current", false, "Show PID of a current shell")
-	helpFlag := fs.Bool("help", false, "Show menu with available commands")
+	fs, wrapper := BuildFlagSet("pids", []*Flag{trackedFlag, allFlag, helpFlag})
 
 	if err := fs.Parse(args); err != nil {
 		log.Fatalf("Failed to parse flags of command <pids>: %s\n", err.Error())
 	}
-	if *helpFlag {
+
+	fName := wrapper.CheckActive()
+	switch fName {
+	case "help":
 		colors.PrintMagenta(info)
 		fmt.Println(pids_help)
-		os.Exit(0)
-	}
-	if *trackedFlag {
+		return
+	case "tracked":
 		fmt.Println(getAllPIDs())
-		os.Exit(0)
-	}
-	if *allFlag {
+		return
+	case "all":
 		fmt.Println(getAllPIDs())
-		os.Exit(0)
+		return
+	default:
+		fmt.Println(os.Getppid())
 	}
-	fmt.Println(os.Getppid())
 }
 
 func formatedTime() string {
