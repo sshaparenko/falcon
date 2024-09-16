@@ -3,6 +3,7 @@ package main
 import (
 	_ "embed"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -12,22 +13,38 @@ import (
 
 func main() {
 
-	if len(os.Args) < 2 {
-		fmt.Println("Not a valid command. Write falcon --help to see a list of avalable commands")
-		os.Exit(1)
+	var (
+		command string
+		flags   []string
+		logger  *log.Logger
+	)
+
+	logger = log.New(os.Stdout, "", log.Ldate|log.Ltime)
+
+	// checkForCommand()
+	switch len(os.Args) {
+	case 1:
+		commands.Falcon(os.Args)
+		return
+	case 2:
+		if os.Args[1] == "-help" || os.Args[1] == "--help" {
+			commands.Falcon(os.Args)
+			return
+		}
 	}
+	// commands.Falcon(os.Args[1:])
 
-	commands.Help(os.Args[1:])
-
-	command := os.Args[1]
-	flags := os.Args[2:]
+	command = os.Args[1]
+	flags = os.Args[2:]
 
 	switch command {
 	case "run":
 		commands.Run(flags)
-		fmt.Printf("%v: Listening to your terminals...\n", formatedTime())
+		logger.Println("Listening to your terminals...")
+		//fmt.Printf("%v: Listening to your terminals...\n", formatedTime())
 	case "stop":
-		fmt.Printf("%v: Saving history...\n", formatedTime())
+		logger.Println("Saving history...")
+		//fmt.Printf("%v: Saving history...\n", formatedTime())
 		colors.PrintGreen("[+] Falcon has finished")
 		os.Exit(0)
 	case "pid":

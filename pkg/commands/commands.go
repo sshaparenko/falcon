@@ -44,7 +44,7 @@ func Run(args []string) {
 	}
 }
 
-func Help(args []string) {
+func Falcon(args []string) {
 	helpFlag := NewFlag("help", false, "show menu with available commands")
 
 	fs, wrapper := BuildFlagSet("falcon", []*Flag{helpFlag})
@@ -56,6 +56,10 @@ func Help(args []string) {
 	fName := wrapper.CheckActive()
 	switch fName {
 	case "help":
+		colors.PrintMagenta(info)
+		fmt.Println(falcon_help)
+		return
+	default:
 		colors.PrintMagenta(info)
 		fmt.Println(falcon_help)
 		return
