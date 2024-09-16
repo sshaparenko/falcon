@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"github.com/sshaparenko/falcon/pkg/colors"
 	"github.com/sshaparenko/falcon/pkg/commands"
@@ -52,8 +51,4 @@ func main() {
 	default:
 		fmt.Printf("%s is unknown command. Write falcon --help to see a list of avalable commands\n", command)
 	}
-}
-
-func formatedTime() string {
-	return time.Now().Format("2006-01-02 15:04:05")
 }
