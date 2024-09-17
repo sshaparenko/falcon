@@ -25,7 +25,7 @@ var (
 )
 
 func Run(args []string) {
-	helpFlag := NewFlag("help", false, "show the menu with available commands")
+	helpFlag := NewFlag("help", "show the menu with available commands")
 
 	fs, wrapper := BuildFlagSet("run", []*Flag{helpFlag})
 
@@ -45,7 +45,7 @@ func Run(args []string) {
 }
 
 func Falcon(args []string) {
-	helpFlag := NewFlag("help", false, "show menu with available commands")
+	helpFlag := NewFlag("help", "show menu with available commands")
 
 	fs, wrapper := BuildFlagSet("falcon", []*Flag{helpFlag})
 
@@ -67,9 +67,9 @@ func Falcon(args []string) {
 }
 
 func Pid(args []string) {
-	trackedFlag := NewFlag("tracked", false, "Show shell PIDs that are tracked by Falcon")
-	allFlag := NewFlag("all", false, "Show PIDs of all shells")
-	helpFlag := NewFlag("help", false, "Show menu with available commands")
+	trackedFlag := NewFlag("tracked", "Show shell PIDs that are tracked by Falcon")
+	allFlag := NewFlag("all", "Show PIDs of all shells")
+	helpFlag := NewFlag("help", "Show menu with available commands")
 
 	fs, wrapper := BuildFlagSet("pids", []*Flag{trackedFlag, allFlag, helpFlag})
 
