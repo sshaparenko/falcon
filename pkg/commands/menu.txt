@@ -1,0 +1,13 @@
+Usage: falcon COMMAND [OPTIONS]
+
+Shell commands history tool
+
+Common Commands:
+  run       Run Falcon to create commands history of the current terminal
+  stop      It will stop Falcon from treking current terminal  
+  pids      Shows the PIDs of all shells currently runnig
+
+Options:
+  --help    Show help menu for falcon 
+
+Run 'falcon COMMAND --help' for more information on a command

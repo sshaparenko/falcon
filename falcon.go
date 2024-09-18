@@ -1,56 +1,54 @@
 package main
 
 import (
-	"bufio"
 	_ "embed"
 	"fmt"
+	"log"
 	"os"
-	"time"
 
 	"github.com/sshaparenko/falcon/pkg/colors"
+	"github.com/sshaparenko/falcon/pkg/commands"
 )
 
-//go:embed common/falcon.txt
-var common string
-
-//go:embed common/menu.txt
-var menu string
-
 func main() {
-	colors.PrintMagenta(common)
-	colors.PrintYellow(menu)
-	reader := bufio.NewReader(os.Stdin)
 
-	for {
-		fmt.Print("> ")
-		input, err := reader.ReadBytes(10)
-		command := string(noDelim(input))
+	var (
+		command string
+		flags   []string
+		logger  *log.Logger
+	)
 
-		if err != nil {
-			colors.PrintRed("Cannot read user input")
-			os.Exit(1)
-		}
+	logger = log.New(os.Stdout, "", log.Ldate|log.Ltime)
 
-		switch command {
-		case "start":
-			fmt.Printf("%v: Staring Falcon...\n", formatedTime())
-			fmt.Printf("%v: Listening to your terminals...\n", formatedTime())
-		case "stop":
-			fmt.Printf("%v: Saving history...\n", formatedTime())
-			colors.PrintGreen("[+] Falcon has finished")
-			os.Exit(0)
-		case "help":
-			colors.PrintYellow(menu)
-		default:
-			fmt.Println("Unknown command")
+	// checkForCommand()
+	switch len(os.Args) {
+	case 1:
+		commands.Falcon(os.Args)
+		return
+	case 2:
+		if os.Args[1] == "-help" || os.Args[1] == "--help" {
+			commands.Falcon(os.Args)
+			return
 		}
 	}
-}
+	// commands.Falcon(os.Args[1:])
 
-func noDelim(input []byte) []byte {
-	return input[:len(input)-1]
-}
+	command = os.Args[1]
+	flags = os.Args[2:]
 
-func formatedTime() string {
-	return time.Now().Format("2006-01-02 15:04:05")
+	switch command {
+	case "run":
+		commands.Run(flags)
+		logger.Println("Listening to your terminals...")
+		//fmt.Printf("%v: Listening to your terminals...\n", formatedTime())
+	case "stop":
+		logger.Println("Saving history...")
+		//fmt.Printf("%v: Saving history...\n", formatedTime())
+		colors.PrintGreen("[+] Falcon has finished")
+		os.Exit(0)
+	case "pid":
+		commands.Pid(flags)
+	default:
+		fmt.Printf("%s is unknown command. Write falcon --help to see a list of avalable commands\n", command)
+	}
 }

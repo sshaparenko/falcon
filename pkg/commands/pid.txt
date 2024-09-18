@@ -1,0 +1,7 @@
+Usage: falcon pids [OPTIONS]
+
+Shows the PIDs of current shell
+
+Options:
+  --tracked   Show shell PIDs that are tracked by Falcon
+  --all       Show PIDs of all shells
