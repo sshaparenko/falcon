@@ -1,6 +1,7 @@
 package terminal
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -97,7 +98,9 @@ func handleAbort(cmd *exec.Cmd) {
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-c
-		cmd.Process.Kill()
+		if err := cmd.Process.Kill(); err != nil {
+			fmt.Println("Failed to kill a shell process")
+		}
 		os.Exit(1)
 	}()
 }
