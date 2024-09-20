@@ -30,7 +30,7 @@ jobs:
           go-version: "1.23.0"
 
       - name: Build binary file
-        run: "./scripts/linux-build.sh"
+        run: "../scripts/linux-build.sh"
 
       - name: Release with release-please
         uses: google-github-actions/release-please-action@v4
