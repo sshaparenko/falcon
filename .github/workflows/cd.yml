@@ -36,7 +36,7 @@ jobs:
         run: "cd .."
 
       - name: Build binary file
-        run: "../scripts/linux-build.sh"
+        run: "scripts/linux-build.sh"
 
       - name: Release with release-please
         uses: googleapis/release-please-action@v4
