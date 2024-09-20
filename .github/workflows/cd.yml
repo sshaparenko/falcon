@@ -29,6 +29,12 @@ jobs:
         with:
           go-version: "1.23.0"
 
+      - name: ls directory
+        run: "ls -a"
+
+      - name: cd ..
+        run: "cd .."
+
       - name: Build binary file
         run: "../scripts/linux-build.sh"
 
