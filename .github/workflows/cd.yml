@@ -33,7 +33,7 @@ jobs:
         run: "ls -a"
 
       - name: Build binary file
-        run: "scripts/linux-build.sh"
+        run: "GOOS=linux GOARCH=amd64 go build -o falcon.go"
 
       - name: Release with release-please
         uses: googleapis/release-please-action@v4
