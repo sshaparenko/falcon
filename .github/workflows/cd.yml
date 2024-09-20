@@ -32,9 +32,6 @@ jobs:
       - name: ls directory
         run: "ls -a"
 
-      - name: cd ..
-        run: "cd .."
-
       - name: Build binary file
         run: "scripts/linux-build.sh"
 
