@@ -30,5 +30,4 @@ jobs:
         uses: googleapis/release-please-action@v4
         with:
           release-type: go
-          tag: "auto"
           token: ${{ secrets.GITHUB_TOKEN }}
