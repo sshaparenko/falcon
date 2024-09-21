@@ -25,11 +25,14 @@ jobs:
       - name: Create release artifacts
         run: "tar -czvf falcon-linux.tar.gz falcon-linux"
 
+      - name: ls
+        run: "ls -a"
+
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          body_path: CHANGELOG.md
+          body_path: ./CHANGELOG.md
           repository: sshaparenko/falcon
           files: falcon-linux.tar.gz
           token: ${{ secrets.GITHUB_TOKEN }}
