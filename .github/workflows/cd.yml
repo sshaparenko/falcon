@@ -29,11 +29,11 @@ jobs:
         with:
           go-version: "1.23.0"
 
-      - name: ls directory
-        run: "ls -a"
+      - name: Build binaries
+        run: "GOOS=linux GOARCH=amd64 go build -o falcon-linux"
 
-      - name: Build binary file
-        run: "GOOS=linux GOARCH=amd64 go build -o falcon.go"
+      - name: Create release artifacts
+        run: "tar -czvf falcon-linux.tar.gz falcon-linux"
 
       - name: Release with release-please
         uses: googleapis/release-please-action@v4
@@ -41,3 +41,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
           manifest-file: release-please-manifest.json
+
+      - name: Upload Release Assets
+        uses: actions/upload-release-asset@v1
+        if: startsWith(githib.ref, 'refs/tags/')
+        with:
+          files: falcon-linux.tar.gz
