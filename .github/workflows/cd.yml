@@ -24,24 +24,4 @@ jobs:
         id: create_release
         uses: googleapis/release-please-action@v4
         with:
-          release-type: go
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build binaries
-        if: steps.create_release.outputs.tag_name != ''
-        run: "GOOS=linux GOARCH=amd64 go build -o falcon-linux"
-
-      - name: Create release artifacts
-        if: steps.create_release.outputs.tag_name != ''
-        run: "tar -czvf falcon-linux.tar.gz falcon-linux"
-
-      - name: Upload Release Assets
-        if: steps.create_release.outputs.tag_name != ''
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.create_release.outputs.tag_name}}
-          release_name: Release ${{ steps.create_release.outputs.tag_name}}
-          body_path: CHANGELOG.md
-          repository: sshaparenko/falcon
-          files: falcon-linux.tar.gz
           token: ${{ secrets.GITHUB_TOKEN }}
