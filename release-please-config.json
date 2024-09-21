@@ -1,5 +1,10 @@
 {
   "release-type": "go",
-  "prerelease-type": "beta",
-  "prerelease": true
+  "packages": {
+    ".": {
+      "release-type": "go",
+      "prerelease-type": "beta",
+      "prerelease": true
+    }
+  }
 }
