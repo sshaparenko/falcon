@@ -3,6 +3,13 @@
   "tag-separator": "@",
   "release-type": "go",
   "separate-pull-requests": true,
+  "packages": {
+    ".": {
+      "release-type": "go",
+      "package-name": "falcon",
+      "version-file": "go.mod"
+    }
+  },
   "bump-minor-pre-major": true,
   "version-file": "go.mod",
   "include-v-in-tag": true,
